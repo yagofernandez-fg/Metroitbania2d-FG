@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class PJController : MonoBehaviour
 {
-    [SerializeField] private float speed;
     [SerializeField] private float jumpForce;
     private Rigidbody2D rb;
     private float NormalGravity;
@@ -10,6 +9,10 @@ public class PJController : MonoBehaviour
     private int jumpCount, maxJump = 1;
     private bool IsFalling;
     private bool IsGrounded;
+    [SerializeField]private float runMaxSpeed;
+    [SerializeField]private float runAccelAmount;
+    [SerializeField]private float runDeccelAmount;
+    private float accelRate;
     
     
     
@@ -25,7 +28,17 @@ public class PJController : MonoBehaviour
     void Update()
     {
         float x = Input.GetAxis("Horizontal");
-        rb.linearVelocityX = x * speed;
+        float targetSpeed = x * runMaxSpeed;
+        targetSpeed = Mathf.Lerp(rb.linearVelocityX, targetSpeed, 1);
+        accelRate = (Mathf.Abs(targetSpeed) > 0.01f) ? runAccelAmount : runDeccelAmount;
+        float speedDif = targetSpeed - rb.linearVelocityX;
+        //Calculate force along x-axis to apply to thr player
+
+        float movement = speedDif * accelRate;
+
+        //Convert this to a vector and apply to rigidbody
+        rb.AddForce(movement * Vector2.right, ForceMode2D.Force);
+        //rb.linearVelocityX = x * speed;
         if (x != 0)
         {
             animator.SetBool("run", true);
@@ -53,13 +66,18 @@ public class PJController : MonoBehaviour
             }
         }
         IsGrounded = touching && rb.linearVelocityY <= 0.01f;
-        if (Input.GetButtonDown("Jump") && jumpCount < maxJump)
+        if (Input.GetButtonDown("Jump") && jumpCount < GameManager.instance.gameData.MaxJump)
         { 
             rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
             
             animator.SetBool("jump", true);
             IsGrounded = false;
             jumpCount++;
+        }
+
+        if (Input.GetButtonUp("Jump") && !IsGrounded && rb.linearVelocityY > 0)
+        {
+            rb.linearVelocity = new Vector2(rb.linearVelocityX, rb.linearVelocityY * .5f);
         }
 
         if (IsGrounded)
