@@ -13,6 +13,7 @@ public class PJController : MonoBehaviour
     [SerializeField]private float runAccelAmount;
     [SerializeField]private float runDeccelAmount;
     private float accelRate;
+    private int comboCount=0;
     
     
     
@@ -27,7 +28,12 @@ public class PJController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        float x = Input.GetAxis("Horizontal");
+            float x = Input.GetAxis("Horizontal");
+            if (comboCount > 0)
+            {
+                x = 0;
+            }
+            
         float targetSpeed = x * runMaxSpeed;
         targetSpeed = Mathf.Lerp(rb.linearVelocityX, targetSpeed, 1);
         accelRate = (Mathf.Abs(targetSpeed) > 0.01f) ? runAccelAmount : runDeccelAmount;
@@ -66,7 +72,7 @@ public class PJController : MonoBehaviour
             }
         }
         IsGrounded = touching && rb.linearVelocityY <= 0.01f;
-        if (Input.GetButtonDown("Jump") && jumpCount < GameManager.instance.gameData.MaxJump)
+        if (Input.GetButtonDown("Jump") && jumpCount < GameManager.instance.gameData.MaxJump&& comboCount == 0)
         { 
             rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
             
@@ -95,7 +101,38 @@ public class PJController : MonoBehaviour
             }
             animator.SetBool("falling", true);
         }
+
+        if (Input.GetButtonDown("Attack1")&& touching)
+        {
+            comboCount = Mathf.Clamp(comboCount + 1, 0, 2);
+            
+            
+            animator.SetInteger("Combo", comboCount);
+        }
         
+    }
+
+    public void finishAttack1()
+    {
+        if (comboCount <= 1)
+        {
+            comboCount = 0;
+            animator.SetInteger("Combo", comboCount);
+        }
+    }    
+    public void finishAttack2()
+    {
+        comboCount = 0;
+        animator.SetInteger("Combo", comboCount);
+    }
+    
+    
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.tag == "Enemy")
+        {
+            other.gameObject.GetComponent<EnemyController>().GetDamage(GameManager.instance.gameData.Dmg);
+        }
     }
     
 }
