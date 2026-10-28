@@ -4,7 +4,9 @@ using UnityEngine;
 [Serializable]
 public class GameData
 {
+    [Header("Vida")]
     [SerializeField]private float life,maxLife;
+    private bool Isdeath = false;
 
     [SerializeField]private float mana, maxMana;
 
@@ -25,6 +27,12 @@ public class GameData
     {
         get { return maxLife; }
         set { maxLife = value; }
+    }
+
+    public bool IsDeath
+    {
+        get { return Isdeath; }
+        set { Isdeath = value; }
     }
 
     public float Mana

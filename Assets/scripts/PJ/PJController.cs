@@ -6,7 +6,7 @@ public class PJController : MonoBehaviour
     private Rigidbody2D rb;
     private float NormalGravity;
     private Animator animator;
-    private int jumpCount, maxJump = 1;
+    private int jumpCount;
     private bool IsFalling;
     private bool IsGrounded;
     [SerializeField]private float runMaxSpeed;
@@ -28,21 +28,27 @@ public class PJController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-            float x = Input.GetAxis("Horizontal");
-            if (comboCount > 0)
-            {
-                x = 0;
-            }
+        if (GameManager.instance.gameData.IsDeath)return;
+        move();
+        jump();
+        Attack();
+    }
+
+    private void move()
+    {
+        float x = Input.GetAxis("Horizontal");
+        if (comboCount > 0)
+        {
+            x = 0;
+        }
             
         float targetSpeed = x * runMaxSpeed;
         targetSpeed = Mathf.Lerp(rb.linearVelocityX, targetSpeed, 1);
         accelRate = (Mathf.Abs(targetSpeed) > 0.01f) ? runAccelAmount : runDeccelAmount;
         float speedDif = targetSpeed - rb.linearVelocityX;
-        //Calculate force along x-axis to apply to thr player
 
         float movement = speedDif * accelRate;
 
-        //Convert this to a vector and apply to rigidbody
         rb.AddForce(movement * Vector2.right, ForceMode2D.Force);
         //rb.linearVelocityX = x * speed;
         if (x != 0)
@@ -61,13 +67,17 @@ public class PJController : MonoBehaviour
         {
             animator.SetBool("run", false);
         }
+    }
+
+    private void jump()
+    {
         bool touching = false;
         Collider2D[] temp = Physics2D.OverlapCircleAll(transform.position, 0.05f);
         for (int i=0; i<temp.Length; i++)
         {
             if (temp[i].tag == "ground")
             {
-               touching = true;
+                touching = true;
                 break;
             }
         }
@@ -101,15 +111,17 @@ public class PJController : MonoBehaviour
             }
             animator.SetBool("falling", true);
         }
+    }
 
-        if (Input.GetButtonDown("Attack1")&& touching)
+    private void Attack()
+    {
+        if (Input.GetButtonDown("Attack1")&& IsGrounded)
         {
             comboCount = Mathf.Clamp(comboCount + 1, 0, 2);
             
             
             animator.SetInteger("Combo", comboCount);
         }
-        
     }
 
     public void finishAttack1()
@@ -133,6 +145,26 @@ public class PJController : MonoBehaviour
         {
             other.gameObject.GetComponent<EnemyController>().GetDamage(GameManager.instance.gameData.Dmg);
         }
+    }
+
+    public void GetDamage(float damage)
+    {
+            GameManager.instance.gameData.Life -= damage;
+            print(damage+" le queda : "+GameManager.instance.gameData.Life);
+            if (GameManager.instance.gameData.Life <= 0 && !GameManager.instance.gameData.IsDeath)
+            {
+                print("GameOver");
+                animator.SetTrigger("Die");
+                GameManager.instance.gameData.IsDeath = true;
+                rb.linearVelocityX = 0;
+                //Destroy(gameObject);
+            }
+            else if(GameManager.instance.gameData.Life > 0)
+            {
+                animator.SetTrigger("Hit");
+                comboCount = 0;
+                animator.SetInteger("Combo", comboCount);
+            }
     }
     
 }
