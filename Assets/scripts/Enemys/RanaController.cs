@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class GoblinController : EnemyController
+public class RanaController : EnemyController
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -13,9 +13,4 @@ public class GoblinController : EnemyController
     {
         base.Update();
     }
-    
-    
-    
-    
-    
 }
