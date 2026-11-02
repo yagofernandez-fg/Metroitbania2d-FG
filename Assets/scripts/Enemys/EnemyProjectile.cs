@@ -11,6 +11,7 @@ public class EnemyProjectile : MonoBehaviour
     
     private Transform player;
     private float Maxy =0;
+    private int derecha = 1;
     
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -19,20 +20,20 @@ public class EnemyProjectile : MonoBehaviour
         rb = gameObject.GetComponent<Rigidbody2D>();
         collider = gameObject.GetComponent<Collider2D>();
         Destroy(this.gameObject, 3);
+        
+        if (transform.position.x <= player.position.x)
+        {
+            derecha = -1;
+        }
     }
 
     private void FixedUpdate()
     {
         if (!IsInAir)return;
-        float newY=0;
-        int derecha = 1;
-        if (transform.position.x <= player.position.x)
+        float currentY = transform.position.y;
+        
+        if (currentY < Maxy) // vajando
         {
-           derecha = -1;
-        }
-        if (Maxy>=newY) // vajando
-        {
-            newY = transform.position.y;
             transform.eulerAngles += new Vector3(0, 0, -derecha);
         }
         else
@@ -49,8 +50,12 @@ public class EnemyProjectile : MonoBehaviour
     {
         IsInAir = true;
         player = PlayerTransform;
-         PlayerTransform.position = new Vector3(PlayerTransform.position.x, PlayerTransform.position.y+1, transform.position.z);
-        Vector3 dir = (PlayerTransform.position - transform.position).normalized;
+        Vector3 targetPosition = new Vector3(
+            player.position.x,
+            player.position.y + 1,
+            transform.position.z
+        );
+        Vector3 dir = (targetPosition - transform.position).normalized;
         
         rb.AddForce(dir * ImpulseForce);
         

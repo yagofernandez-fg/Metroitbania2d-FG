@@ -1,19 +1,23 @@
 using System;
+using TMPro;
 using UnityEngine;
 
 [Serializable]
 public class GameData
 {
-    [Header("Vida")]
-    [SerializeField]private float life,maxLife;
+    [Header("Vida")] 
+    [SerializeField] private float life;
+    [SerializeField]private float maxLife;
     private bool Isdeath = false;
-
-    [SerializeField]private float mana, maxMana;
-
+    [SerializeField] private int potionCount;
+    [Header("Mana")] 
+    [SerializeField] private float mana;
+    [SerializeField]private float maxMana;
+    [Header("Movility")]
     [SerializeField]private float maxJump;
-
+    [Header("Damage")]
     [SerializeField]private float dmg;
-
+    [Header("Currensy")]
     [SerializeField]private int currency;
 
 
@@ -62,6 +66,12 @@ public class GameData
     {
         get { return currency; }
         set { currency = value; }
+    }
+    
+    public int PotionCount
+    {
+        get { return potionCount; }
+        set { potionCount = value; }
     }
     
 

@@ -15,6 +15,8 @@ public class PJController : MonoBehaviour
     private float accelRate;
     private int comboCount=0;
     
+    private LvlManager lvlManager;
+    
     
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -23,6 +25,8 @@ public class PJController : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         animator = transform.GetChild(0).GetComponent<Animator>();
         NormalGravity = rb.gravityScale;
+        
+        lvlManager = GameObject.Find("LvlManager").GetComponent<LvlManager>();
     }
 
     // Update is called once per frame
@@ -150,6 +154,7 @@ public class PJController : MonoBehaviour
     public void GetDamage(float damage)
     {
             GameManager.instance.gameData.Life -= damage;
+            lvlManager.UpdateLifeBar();
             print(damage+" le queda : "+GameManager.instance.gameData.Life);
             if (GameManager.instance.gameData.Life <= 0 && !GameManager.instance.gameData.IsDeath)
             {
