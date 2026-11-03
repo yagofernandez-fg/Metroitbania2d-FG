@@ -14,7 +14,7 @@ public class DoorController : MonoBehaviour
         if (other.tag == "Player")
         {
             GameManager.instance.doorToGo = DoorNum;
-            SceneManager.LoadScene(SceneTrabel);
+            SceneController.instance.NextZone(SceneTrabel);
         }
     }
 }

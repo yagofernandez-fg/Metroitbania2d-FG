@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class PJController : MonoBehaviour
@@ -14,11 +15,16 @@ public class PJController : MonoBehaviour
     [SerializeField]private float runDeccelAmount;
     private float accelRate;
     private int comboCount=0;
+
+    [SerializeField] private float attackRate = 0.3f;
     
     private LvlManager lvlManager;
-    
-    
-    
+
+    private float TimerPas = 10;
+    bool canAttack = true;
+
+
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -32,10 +38,20 @@ public class PJController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (GameManager.instance.gameData.IsDeath)return;
+        if (GameManager.instance.gameData.IsDeath || GameManager.instance.Intransition) return;
+
+        TimerPas += Time.deltaTime;
         move();
         jump();
-        Attack();
+        if (TimerPas >= attackRate)
+        {
+            canAttack = true;
+        }
+        if (canAttack || comboCount==1)
+        {
+            Attack();
+            canAttack = false;
+        }
     }
 
     private void move()
@@ -43,7 +59,7 @@ public class PJController : MonoBehaviour
         float x = Input.GetAxis("Horizontal");
         if (comboCount > 0)
         {
-            x = 0;
+            x /=4;
         }
             
         float targetSpeed = x * runMaxSpeed;
@@ -58,11 +74,11 @@ public class PJController : MonoBehaviour
         if (x != 0)
         {
             animator.SetBool("run", true);
-            if (x > 0)
+            if (x > 0 && comboCount <= 0)
             {
                 transform.eulerAngles = Vector3.zero;
             }
-            else if (x < 0)
+            else if (x < 0 && comboCount <= 0)
             {
                 transform.eulerAngles = new Vector3(0, 180,0);
             }
@@ -121,6 +137,8 @@ public class PJController : MonoBehaviour
     {
         if (Input.GetButtonDown("Attack1")&& IsGrounded)
         {
+
+            TimerPas = 0;
             comboCount = Mathf.Clamp(comboCount + 1, 0, 2);
             
             
@@ -147,7 +165,9 @@ public class PJController : MonoBehaviour
     {
         if (other.tag == "Enemy")
         {
+            Vector3 direccion = (transform.position - other.transform.position).normalized;
             other.gameObject.GetComponent<EnemyController>().GetDamage(GameManager.instance.gameData.Dmg);
+            other.gameObject.GetComponent<EnemyController>().GetHit(direccion);
         }
     }
 

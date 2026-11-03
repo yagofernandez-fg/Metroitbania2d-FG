@@ -12,6 +12,10 @@ public class EnemyController : MonoBehaviour
     [SerializeField]protected float Damage;
     [SerializeField] protected float distanceToAttack;
     [SerializeField]protected float attackRate;
+
+    [SerializeField] protected GameObject BloodParticule;
+    [SerializeField] protected Color BloodColor;
+    [SerializeField] protected float KnockbackForce;
     protected float TimerPas;
     protected bool attacking;
     protected Animator anim;
@@ -20,7 +24,8 @@ public class EnemyController : MonoBehaviour
     protected Rigidbody2D rb;
     protected bool IsDead = false;
     protected Collider2D collider;
-    
+    protected bool IsKnockback = false;
+
     protected void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -63,7 +68,7 @@ public class EnemyController : MonoBehaviour
 
     private void ChasePlayer()
     {
-        if(IsDead) return;
+        if(IsDead||IsKnockback) return;
         anim.SetBool("run", true);
         Vector3 moveDir = PlayerTransform.position - transform.position;// Posicion final - Posicion Inicial
         if (moveDir.x < 0)// izquierda negativo
@@ -81,10 +86,6 @@ public class EnemyController : MonoBehaviour
         {
             rb.linearVelocityX = 0;
             anim.SetBool("run", false);
-            //Invoke("Attack",1);
-            // InvokeRepeating("Attack",0.4f,2);
-            // CancelInvoke();
-            //Attack();
             attacking = true;
                 
         }
@@ -126,6 +127,31 @@ public class EnemyController : MonoBehaviour
             anim.SetTrigger("Win");
         }
         
+    }
+
+    public void GetHit(Vector3 dirHit)
+    {
+        if (IsDead) return;
+
+        IsKnockback = true;
+
+        rb.linearVelocity = Vector2.zero;
+        rb.AddForce(-dirHit.normalized * KnockbackForce, ForceMode2D.Impulse);
+        Invoke(nameof(EndKnockback), 0.25f);
+
+        Vector2 pos = new Vector2(transform.position.x, transform.position.y + 0.5f);
+        GameObject blood = Instantiate(BloodParticule, pos, Quaternion.identity);
+        ParticleSystem ps = blood.GetComponent<ParticleSystem>();
+
+        var main = ps.main;
+        main.startColor = BloodColor;
+
+        ps.Play();
+    }
+
+    private void EndKnockback()
+    {
+        IsKnockback = false;
     }
 
 

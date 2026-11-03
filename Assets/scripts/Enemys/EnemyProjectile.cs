@@ -21,29 +21,18 @@ public class EnemyProjectile : MonoBehaviour
         collider = gameObject.GetComponent<Collider2D>();
         Destroy(this.gameObject, 3);
         
-        if (transform.position.x <= player.position.x)
-        {
-            derecha = -1;
-        }
+        //if (transform.position.x <= player.position.x)
+        //{
+        //    derecha = -1;
+        //}
     }
 
     private void FixedUpdate()
     {
-        if (!IsInAir)return;
-        float currentY = transform.position.y;
-        
-        if (currentY < Maxy) // vajando
-        {
-            transform.eulerAngles += new Vector3(0, 0, -derecha);
-        }
-        else
-        {
-            transform.eulerAngles += new Vector3(0, 0, derecha);
-        }
-        
-        Maxy = transform.position.y;
-        
-        
+        if (!IsInAir) return;
+
+        float angle = Mathf.Atan2(rb.linearVelocity.y, rb.linearVelocity.x) * Mathf.Rad2Deg;
+        transform.rotation = Quaternion.Euler(0, 0, angle + 180f);
     }
 
     public void ImpulseProjectile(Transform PlayerTransform)

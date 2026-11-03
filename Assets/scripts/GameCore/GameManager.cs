@@ -6,6 +6,7 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
     public GameData gameData;
     public int doorToGo;
+    public bool Intransition = false;
 
     private void Awake()
     {

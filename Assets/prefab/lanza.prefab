@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 989673462008814731}
   - component: {fileID: 6371062935260996720}
   - component: {fileID: 8543057660719891082}
+  - component: {fileID: 5358809314282072196}
   m_Layer: 6
   m_Name: lanza
   m_TagString: Untagged
@@ -183,3 +184,203 @@ MonoBehaviour:
   ImpulseForce: 700
   rb: {fileID: 6371062935260996720}
   dmg: 3
+--- !u!114 &5358809314282072196
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7001855543514074255}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7db70e0ea77f5ac47a8f4565a9406397, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.RenderPipelines.Universal.2D.Runtime::UnityEngine.Rendering.Universal.ShadowCaster2D
+  m_ShadowGroup: 0
+  m_Priority: 3
+  m_ComponentVersion: 6
+  m_HasRenderer: 1
+  m_UseRendererSilhouette: 1
+  m_CastsShadows: 1
+  m_SelfShadows: 0
+  m_AlphaCutoff: 0.1
+  m_ApplyToSortingLayers: 00000000i
+  m_ShapePath:
+  - {x: -0.58255196, y: -0.1017437, z: 0}
+  - {x: -0.6827469, y: 0.0076961517, z: 0}
+  - {x: -0.58914757, y: 0.11493778, z: 0}
+  - {x: -0.4166832, y: 0.10884285, z: 0}
+  - {x: -0.41448498, y: 0.0780592, z: 0}
+  - {x: 0.6705065, y: 0.068761826, z: 0}
+  - {x: 0.6683073, y: -0.06436443, z: 0}
+  - {x: -0.41228676, y: -0.06706524, z: 0}
+  - {x: -0.4122858, y: -0.10884285, z: 0}
+  m_ShapePathHash: 384344863
+  m_InstanceId: 0
+  m_ShadowShape2DComponent: {fileID: 4381728552862695429}
+  m_ShadowShape2DProvider:
+    rid: 6610576250891141464
+  m_ShadowCastingSource: 1
+  m_ShadowMesh:
+    rid: 6610576250891141465
+  m_CastingOption: 1
+  m_PreviousTrimEdge: 0.01
+  m_PreviousEdgeProcessing: 1
+  m_PreviousShadowCastingSource: 1
+  m_PreviousShadowShape2DSource: {fileID: 4381728552862695429}
+  m_PreviousShadowShape2DProviderHash: -646221079
+  m_SelectionSources:
+    rid: 6610576250891141466
+  references:
+    version: 2
+    RefIds:
+    - rid: 6610576250891141464
+      type: {class: ShadowShape2DProvider_SpriteRenderer, ns: UnityEngine.Rendering.Universal, asm: Unity.RenderPipelines.Universal.2D.Runtime}
+      data: 
+    - rid: 6610576250891141465
+      type: {class: ShadowMesh2D, ns: UnityEngine.Rendering.Universal, asm: Unity.RenderPipelines.Universal.2D.Runtime}
+      data:
+        m_Vertices:
+        - position: {x: -0.58255196, y: -0.1017437, z: 0}
+          tangent: {x: -1, y: 0, z: -0.6827469, w: 0.0076961517}
+        - position: {x: -0.6827469, y: 0.0076961517, z: 0}
+          tangent: {x: -1, y: 0, z: -0.58914757, w: 0.11493778}
+        - position: {x: -0.58914757, y: 0.11493778, z: 0}
+          tangent: {x: -1, y: 0, z: -0.4166832, w: 0.10884285}
+        - position: {x: -0.4166832, y: 0.10884285, z: 0}
+          tangent: {x: -1, y: 0, z: -0.41448498, w: 0.0780592}
+        - position: {x: -0.41448498, y: 0.0780592, z: 0}
+          tangent: {x: -1, y: 0, z: 0.6705065, w: 0.068761826}
+        - position: {x: 0.6705065, y: 0.068761826, z: 0}
+          tangent: {x: -1, y: 0, z: 0.6683073, w: -0.06436443}
+        - position: {x: 0.6683073, y: -0.06436443, z: 0}
+          tangent: {x: -1, y: 0, z: -0.41228676, w: -0.06706524}
+        - position: {x: -0.41228676, y: -0.06706524, z: 0}
+          tangent: {x: -1, y: 0, z: -0.4122858, w: -0.10884285}
+        - position: {x: -0.4122858, y: -0.10884285, z: 0}
+          tangent: {x: -1, y: 0, z: -0.58255196, w: -0.1017437}
+        - position: {x: -0.4122858, y: -0.10884285, z: 0}
+          tangent: {x: 0, y: 0, z: -0.58255196, w: -0.1017437}
+        - position: {x: -0.58255196, y: -0.1017437, z: 0}
+          tangent: {x: 0, y: 0, z: -0.4122858, w: -0.10884285}
+        - position: {x: -0.4122858, y: -0.10884285, z: 0}
+          tangent: {x: 1, y: 0, z: -0.41228676, w: -0.06706524}
+        - position: {x: -0.4122858, y: -0.10884285, z: 0}
+          tangent: {x: 3, y: 0, z: -0.6827469, w: 0.0076961517}
+        - position: {x: -0.58255196, y: -0.1017437, z: 0}
+          tangent: {x: 0, y: 0, z: -0.6827469, w: 0.0076961517}
+        - position: {x: -0.6827469, y: 0.0076961517, z: 0}
+          tangent: {x: 0, y: 0, z: -0.58255196, w: -0.1017437}
+        - position: {x: -0.58255196, y: -0.1017437, z: 0}
+          tangent: {x: 1, y: 0, z: -0.4122858, w: -0.10884285}
+        - position: {x: -0.58255196, y: -0.1017437, z: 0}
+          tangent: {x: 3, y: 0, z: -0.58914757, w: 0.11493778}
+        - position: {x: -0.6827469, y: 0.0076961517, z: 0}
+          tangent: {x: 0, y: 0, z: -0.58914757, w: 0.11493778}
+        - position: {x: -0.58914757, y: 0.11493778, z: 0}
+          tangent: {x: 0, y: 0, z: -0.6827469, w: 0.0076961517}
+        - position: {x: -0.6827469, y: 0.0076961517, z: 0}
+          tangent: {x: 1, y: 0, z: -0.58255196, w: -0.1017437}
+        - position: {x: -0.6827469, y: 0.0076961517, z: 0}
+          tangent: {x: 3, y: 0, z: -0.4166832, w: 0.10884285}
+        - position: {x: -0.58914757, y: 0.11493778, z: 0}
+          tangent: {x: 0, y: 0, z: -0.4166832, w: 0.10884285}
+        - position: {x: -0.4166832, y: 0.10884285, z: 0}
+          tangent: {x: 0, y: 0, z: -0.58914757, w: 0.11493778}
+        - position: {x: -0.58914757, y: 0.11493778, z: 0}
+          tangent: {x: 1, y: 0, z: -0.6827469, w: 0.0076961517}
+        - position: {x: -0.58914757, y: 0.11493778, z: 0}
+          tangent: {x: 3, y: 0, z: -0.41448498, w: 0.0780592}
+        - position: {x: -0.4166832, y: 0.10884285, z: 0}
+          tangent: {x: 0, y: 0, z: -0.41448498, w: 0.0780592}
+        - position: {x: -0.41448498, y: 0.0780592, z: 0}
+          tangent: {x: 0, y: 0, z: -0.4166832, w: 0.10884285}
+        - position: {x: -0.4166832, y: 0.10884285, z: 0}
+          tangent: {x: 1, y: 0, z: -0.58914757, w: 0.11493778}
+        - position: {x: -0.4166832, y: 0.10884285, z: 0}
+          tangent: {x: 3, y: 0, z: 0.6705065, w: 0.068761826}
+        - position: {x: -0.41448498, y: 0.0780592, z: 0}
+          tangent: {x: 0, y: 0, z: 0.6705065, w: 0.068761826}
+        - position: {x: 0.6705065, y: 0.068761826, z: 0}
+          tangent: {x: 0, y: 0, z: -0.41448498, w: 0.0780592}
+        - position: {x: -0.41448498, y: 0.0780592, z: 0}
+          tangent: {x: 1, y: 0, z: -0.4166832, w: 0.10884285}
+        - position: {x: -0.41448498, y: 0.0780592, z: 0}
+          tangent: {x: 3, y: 0, z: 0.6683073, w: -0.06436443}
+        - position: {x: 0.6705065, y: 0.068761826, z: 0}
+          tangent: {x: 0, y: 0, z: 0.6683073, w: -0.06436443}
+        - position: {x: 0.6683073, y: -0.06436443, z: 0}
+          tangent: {x: 0, y: 0, z: 0.6705065, w: 0.068761826}
+        - position: {x: 0.6705065, y: 0.068761826, z: 0}
+          tangent: {x: 1, y: 0, z: -0.41448498, w: 0.0780592}
+        - position: {x: 0.6705065, y: 0.068761826, z: 0}
+          tangent: {x: 3, y: 0, z: -0.41228676, w: -0.06706524}
+        - position: {x: 0.6683073, y: -0.06436443, z: 0}
+          tangent: {x: 0, y: 0, z: -0.41228676, w: -0.06706524}
+        - position: {x: -0.41228676, y: -0.06706524, z: 0}
+          tangent: {x: 0, y: 0, z: 0.6683073, w: -0.06436443}
+        - position: {x: 0.6683073, y: -0.06436443, z: 0}
+          tangent: {x: 1, y: 0, z: 0.6705065, w: 0.068761826}
+        - position: {x: 0.6683073, y: -0.06436443, z: 0}
+          tangent: {x: 3, y: 0, z: -0.4122858, w: -0.10884285}
+        - position: {x: -0.41228676, y: -0.06706524, z: 0}
+          tangent: {x: 0, y: 0, z: -0.4122858, w: -0.10884285}
+        - position: {x: -0.4122858, y: -0.10884285, z: 0}
+          tangent: {x: 0, y: 0, z: -0.41228676, w: -0.06706524}
+        - position: {x: -0.41228676, y: -0.06706524, z: 0}
+          tangent: {x: 1, y: 0, z: 0.6683073, w: -0.06436443}
+        - position: {x: -0.41228676, y: -0.06706524, z: 0}
+          tangent: {x: 3, y: 0, z: -0.58255196, w: -0.1017437}
+        m_Indices: 08000000090000000a0000000a0000000000000008000000000000000d0000000e0000000e000000010000000000000001000000110000001200000012000000020000000100000002000000150000001600000016000000030000000200000003000000190000001a0000001a0000000400000003000000040000001d0000001e0000001e000000050000000400000005000000210000002200000022000000060000000500000006000000250000002600000026000000070000000600000007000000290000002a0000002a0000000800000007000000080000000b0000000c000000000000000f00000010000000010000001300000014000000020000001700000018000000030000001b0000001c000000040000001f00000020000000050000002300000024000000060000002700000028000000070000002b0000002c000000i
+        m_IsTransformable: 1
+        m_LocalBounds:
+          m_Center: {x: -0.006120205, y: 0.0030474663, z: 0}
+          m_Extent: {x: 0.6766267, y: 0.111890316, z: 0}
+        m_EdgeProcessing: 1
+        m_TrimEdge: 0.01
+        m_FlipX: 0
+        m_FlipY: 0
+        m_InitialTrim: 0.01
+    - rid: 6610576250891141466
+      type: {class: Shadow2DProviderSources, ns: UnityEngine.Rendering.Universal, asm: Unity.RenderPipelines.Universal.2D.Runtime}
+      data:
+        m_SelectedHashCode: 1
+        m_SelectedSource:
+          rid: 6610576250891141470
+        m_Provider2DCache:
+          rid: 6610576250891141467
+    - rid: 6610576250891141467
+      type: {class: 'Provider2DCache`1[[UnityEngine.Rendering.Universal.ShadowShape2DProvider, Unity.RenderPipelines.Universal.2D.Runtime]]', ns: UnityEngine.Rendering.Universal, asm: Unity.RenderPipelines.Universal.2D.Runtime}
+      data:
+        m_Cache:
+        - m_Key:
+            m_TypeName: ShadowShape2DProvider_Collider2D
+            m_Component: {fileID: 989673462008814731}
+            m_UsesComponent: 1
+          m_Value:
+            m_Provider:
+              rid: 6610576250891141468
+        - m_Key:
+            m_TypeName: ShadowShape2DProvider_SpriteRenderer
+            m_Component: {fileID: 4381728552862695429}
+            m_UsesComponent: 1
+          m_Value:
+            m_Provider:
+              rid: 6610576250891141469
+    - rid: 6610576250891141468
+      type: {class: ShadowShape2DProvider_Collider2D, ns: UnityEngine.Rendering.Universal, asm: Unity.RenderPipelines.Universal.2D.Runtime}
+      data: 
+    - rid: 6610576250891141469
+      type: {class: ShadowShape2DProvider_SpriteRenderer, ns: UnityEngine.Rendering.Universal, asm: Unity.RenderPipelines.Universal.2D.Runtime}
+      data: 
+    - rid: 6610576250891141470
+      type: {class: Shadow2DSource_ShapeEditor, ns: UnityEngine.Rendering.Universal, asm: Unity.RenderPipelines.Universal.2D.Runtime}
+      data:
+        m_HashCode: 0
+        m_SourceType: 0
+        m_MenuPriority: -2147483648
+        m_MenuName:
+          m_Text: Shape Editor
+          m_Image: {fileID: 0}
+          m_Tooltip: 
+          m_TextWithWhitespace: "Shape Editor\u200B"
