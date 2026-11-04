@@ -19,6 +19,26 @@ public class GameData
     [SerializeField]private float dmg;
     [Header("Currensy")]
     [SerializeField]private int currency;
+    
+    [Header("SaveData")]
+    [SerializeField] private int Sceneloc; 
+    [SerializeField] private Vector3 SpawnPoints;
+
+
+    public GameData()
+    {
+        this.life = 10;
+        this.maxLife = 10;
+        Isdeath = false;
+        this.potionCount = 0;
+        this.mana = 5;
+        this.maxMana = 5;
+        this.maxJump = 1;
+        this.dmg = 2;
+        this.currency = 0;
+        Sceneloc = 1;
+        SpawnPoints = new Vector3(-7.7f,-6.9f,0f);
+    }
 
 
     public float Life
@@ -72,6 +92,17 @@ public class GameData
     {
         get { return potionCount; }
         set { potionCount = value; }
+    }
+
+    public int SceneLoc
+    {
+        get { return Sceneloc; }
+        set { Sceneloc = value; }
+    }
+    public Vector3 SpawnPoint
+    {
+        get { return SpawnPoints; }
+        set { SpawnPoints = value; }
     }
     
 
