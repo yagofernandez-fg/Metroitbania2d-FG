@@ -55,8 +55,12 @@ MonoBehaviour:
     maxJump: 1
     dmg: 1
     currency: 0
+    Sceneloc: 1
+    SpawnPoints: {x: -7.7, y: -6.9, z: 0}
   doorToGo: 0
   Intransition: 0
+  SaveSlot: 
+  IsFromLoad: 0
 --- !u!114 &2866255636852281226
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -163,7 +167,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &6263048407713215931
 RectTransform:
   m_ObjectHideFlags: 0

@@ -66,13 +66,15 @@ public class MainMenuManager : MonoBehaviour
         if (PlayerPrefs.HasKey("GameData" + i.ToString()))
         {
             GameManager.instance.LoadData();
+            
+            GameManager.instance.IsFromLoad = true;
         }
         else
         {
             GameData StandarSave = new GameData();
             GameManager.instance.gameData = StandarSave;
         }
-        SceneManager.LoadScene(GameManager.instance.gameData.SceneLoc);
+        SceneController.instance.NextZone(GameManager.instance.gameData.SceneLoc);
         
     }
 }

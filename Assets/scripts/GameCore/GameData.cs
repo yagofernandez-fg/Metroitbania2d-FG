@@ -21,7 +21,7 @@ public class GameData
     [SerializeField]private int currency;
     
     [Header("SaveData")]
-    [SerializeField] private int Sceneloc; 
+    [SerializeField] private string Sceneloc; 
     [SerializeField] private Vector3 SpawnPoints;
 
 
@@ -36,7 +36,7 @@ public class GameData
         this.maxJump = 1;
         this.dmg = 2;
         this.currency = 0;
-        Sceneloc = 1;
+        Sceneloc = "Zona1";
         SpawnPoints = new Vector3(-7.7f,-6.9f,0f);
     }
 
@@ -94,7 +94,7 @@ public class GameData
         set { potionCount = value; }
     }
 
-    public int SceneLoc
+    public string SceneLoc
     {
         get { return Sceneloc; }
         set { Sceneloc = value; }

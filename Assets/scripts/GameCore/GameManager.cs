@@ -8,6 +8,8 @@ public class GameManager : MonoBehaviour
     public int doorToGo;
     public bool Intransition = false;
     public String SaveSlot;
+    
+    public bool IsFromLoad = false;
 
     private void Awake()
     {
@@ -46,6 +48,7 @@ public class GameManager : MonoBehaviour
     {
         string Data = PlayerPrefs.GetString(SaveSlot);
         gameData = JsonUtility.FromJson<GameData>(Data);
+        
     }
     
     

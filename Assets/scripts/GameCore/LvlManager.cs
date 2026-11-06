@@ -16,9 +16,20 @@ public class LvlManager : MonoBehaviour
     void Start()
     {
         Transform PJ = GameObject.FindWithTag("Player").transform;
+
+
+        if (GameManager.instance.IsFromLoad)
+        {
+            PJ.position = GameManager.instance.gameData.SpawnPoint;
+            GameManager.instance.IsFromLoad = false;
+        }
+        else
+        {
+            PJ.position = SpawnPoints[GameManager.instance.doorToGo].position;
+            PJ.rotation = SpawnPoints[GameManager.instance.doorToGo].rotation;
+        }
         
-        PJ.position = SpawnPoints[GameManager.instance.doorToGo].position;
-        PJ.rotation = SpawnPoints[GameManager.instance.doorToGo].rotation;
+        
         
         UpdateLifeBar();
         UpdateManaBar();
