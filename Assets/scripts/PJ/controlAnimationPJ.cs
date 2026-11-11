@@ -22,4 +22,9 @@ public class controlAnimationPJ : MonoBehaviour
         pjController.finishAttack2();
     }
 
+    public void FinishHardAttack()
+    {
+        pjController.CanMove(true);
+    }
+
 }

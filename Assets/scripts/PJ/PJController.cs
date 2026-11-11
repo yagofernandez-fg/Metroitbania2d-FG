@@ -17,11 +17,14 @@ public class PJController : MonoBehaviour
     private int comboCount=0;
 
     [SerializeField] private float attackRate = 0.3f;
+    [SerializeField] private GameObject MagicPrefab;
+    [SerializeField] private float ManaMagicCost=1;
     
     private LvlManager lvlManager;
 
     private float TimerPas = 10;
     bool canAttack = true;
+    bool canMove = true;
 
 
 
@@ -52,10 +55,51 @@ public class PJController : MonoBehaviour
             Attack();
             canAttack = false;
         }
+
+        if (IsGrounded)
+        {
+            hardAttack();
+        }
+
+        Magic();
+    }
+
+    private void Magic()
+    {
+        
+            if (Input.GetButtonDown("Magic"))
+            {
+                if (GameManager.instance.gameData.Mana > 0)
+                {
+                    animator.SetTrigger("Magic");
+                    Vector2 dir = transform.position;
+                    Vector2 dirProjectil = Vector2.zero;
+                    if (transform.eulerAngles == Vector3.zero) dir.x += 1;
+                    else dir.x -= 1;
+                    dir.y += 1;
+
+                    GameObject BolaF = Instantiate(MagicPrefab, dir, transform.rotation);
+                    BolaF.GetComponent<Rigidbody2D>().AddForce(transform.right * 10, ForceMode2D.Impulse);
+                    
+                    GameManager.instance.gameData.Mana -= ManaMagicCost;
+                    lvlManager.UpdateManaBar();
+                }
+            }
+    }
+
+    private void hardAttack()
+    {
+        if (Input.GetButtonDown("HardAttck"))
+        {
+            rb.linearVelocityX /= 4;
+            animator.SetTrigger("HardAttack");
+            canMove =  false;
+        }
     }
 
     private void move()
     {
+        if(!canMove) return;
         float x = Input.GetAxis("Horizontal");
         if (comboCount > 0)
         {
@@ -91,6 +135,7 @@ public class PJController : MonoBehaviour
 
     private void jump()
     {
+        if (!canMove) return;
         bool touching = false;
         Collider2D[] temp = Physics2D.OverlapCircleAll(transform.position, 0.05f);
         for (int i=0; i<temp.Length; i++)
@@ -191,5 +236,9 @@ public class PJController : MonoBehaviour
                 animator.SetInteger("Combo", comboCount);
             }
     }
-    
+
+    public void CanMove(bool _canMove = true)
+    {
+        canMove = _canMove;
+    }
 }

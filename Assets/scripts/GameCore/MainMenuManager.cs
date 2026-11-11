@@ -72,7 +72,9 @@ public class MainMenuManager : MonoBehaviour
         else
         {
             GameData StandarSave = new GameData();
+            ScenarioData scenarioData = new ScenarioData();
             GameManager.instance.gameData = StandarSave;
+            GameManager.instance.scenarioData = scenarioData;
         }
         SceneController.instance.NextZone(GameManager.instance.gameData.SceneLoc);
         

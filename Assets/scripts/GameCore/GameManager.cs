@@ -8,7 +8,7 @@ public class GameManager : MonoBehaviour
     public int doorToGo;
     public bool Intransition = false;
     public String SaveSlot;
-    
+    public ScenarioData scenarioData;
     public bool IsFromLoad = false;
 
     private void Awake()
@@ -24,30 +24,26 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public void SaveData()
     {
         // JSON
         
-        string json = JsonUtility.ToJson(gameData);
-        PlayerPrefs.SetString(SaveSlot, json);
+        string jsonGD = JsonUtility.ToJson(gameData);
+        string jsonSD = JsonUtility.ToJson(scenarioData);
+        PlayerPrefs.SetString(SaveSlot, jsonGD);
+        PlayerPrefs.SetString(SaveSlot+"Scenario", jsonSD);
         
     }
 
     public void LoadData()
     {
-        string Data = PlayerPrefs.GetString(SaveSlot);
-        gameData = JsonUtility.FromJson<GameData>(Data);
+        string jsonGD = PlayerPrefs.GetString(SaveSlot);
+        gameData = JsonUtility.FromJson<GameData>(jsonGD);
+        
+        string jsonSD = PlayerPrefs.GetString(SaveSlot+"Scenario");
+        scenarioData = JsonUtility.FromJson<ScenarioData>(jsonSD);
+        
+        
         
     }
     

@@ -6302,6 +6302,8 @@ MonoBehaviour:
   runAccelAmount: 1.5
   runDeccelAmount: 4
   attackRate: 0.6
+  MagicPrefab: {fileID: 6011146887485845535, guid: 47a179870ff94624d8d0da569c08d8cb, type: 3}
+  ManaMagicCost: 0
 --- !u!1 &747402248
 GameObject:
   m_ObjectHideFlags: 0
@@ -7233,6 +7235,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10379332cb3b6eb4bbb6772eaff7eb71, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Door
+  id: 0
 --- !u!1001 &900006390
 PrefabInstance:
   m_ObjectHideFlags: 0

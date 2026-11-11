@@ -64,6 +64,7 @@ public class EnemyController : MonoBehaviour
         {
           other.GetComponent<PJController>().GetDamage(Damage);
         }
+        
     }
 
     private void ChasePlayer()
@@ -138,7 +139,7 @@ public class EnemyController : MonoBehaviour
         rb.linearVelocity = Vector2.zero;
         rb.AddForce(-dirHit.normalized * KnockbackForce, ForceMode2D.Impulse);
         Invoke(nameof(EndKnockback), 0.25f);
-
+        //rb.linearVelocity = Vector2.zero;
         Vector2 pos = new Vector2(transform.position.x, transform.position.y + 0.5f);
         GameObject blood = Instantiate(BloodParticule, pos, Quaternion.identity);
         ParticleSystem ps = blood.GetComponent<ParticleSystem>();

@@ -17,6 +17,7 @@ public class GameData
     [SerializeField]private float maxJump;
     [Header("Damage")]
     [SerializeField]private float dmg;
+    [SerializeField]private float magicDmg;
     [Header("Currensy")]
     [SerializeField]private int currency;
     
@@ -104,6 +105,13 @@ public class GameData
         get { return SpawnPoints; }
         set { SpawnPoints = value; }
     }
+
+    public float MagicDmg
+    {
+        get { return magicDmg; }
+        set { magicDmg = value; }
+    }
+    
     
 
 }
