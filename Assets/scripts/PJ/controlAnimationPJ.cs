@@ -26,5 +26,9 @@ public class controlAnimationPJ : MonoBehaviour
     {
         pjController.CanMove(true);
     }
+    public void FinishMagicAttack()
+    {
+        pjController.CanMove(true);
+    }
 
 }

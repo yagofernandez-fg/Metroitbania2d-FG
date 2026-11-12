@@ -26,6 +26,8 @@ public class PJController : MonoBehaviour
     bool canAttack = true;
     bool canMove = true;
 
+    bool IsDoingSmt = false;
+
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -46,32 +48,39 @@ public class PJController : MonoBehaviour
         TimerPas += Time.deltaTime;
         move();
         jump();
+        
         if (TimerPas >= attackRate)
         {
             canAttack = true;
         }
-        if (canAttack || comboCount==1)
+        if ((canAttack || comboCount==1 )&& !IsDoingSmt)
         {
             Attack();
-            canAttack = false;
         }
 
-        if (IsGrounded)
+        if (IsGrounded && !IsDoingSmt && canAttack)
         {
             hardAttack();
         }
 
-        Magic();
+        if (IsGrounded && canAttack && !IsDoingSmt)
+        {
+            Magic();
+        }
+
     }
 
     private void Magic()
     {
-        
             if (Input.GetButtonDown("Magic"))
             {
                 if (GameManager.instance.gameData.Mana > 0)
                 {
-                    animator.SetTrigger("Magic");
+
+                canAttack = false;
+                IsDoingSmt = true;
+                rb.linearVelocityX = 0;
+                animator.SetTrigger("Magic");
                     Vector2 dir = transform.position;
                     Vector2 dirProjectil = Vector2.zero;
                     if (transform.eulerAngles == Vector3.zero) dir.x += 1;
@@ -82,16 +91,24 @@ public class PJController : MonoBehaviour
                     BolaF.GetComponent<Rigidbody2D>().AddForce(transform.right * 10, ForceMode2D.Impulse);
                     
                     GameManager.instance.gameData.Mana -= ManaMagicCost;
-                    lvlManager.UpdateManaBar();
-                }
+
+                canMove = false;
+                lvlManager.UpdateManaBar();
             }
+            else
+            {
+                lvlManager.ShackManabar();
+            }
+        }
     }
 
     private void hardAttack()
     {
         if (Input.GetButtonDown("HardAttck"))
         {
-            rb.linearVelocityX /= 4;
+            canAttack = false;
+            IsDoingSmt = true;
+            rb.linearVelocityX =0;
             animator.SetTrigger("HardAttack");
             canMove =  false;
         }
@@ -103,7 +120,7 @@ public class PJController : MonoBehaviour
         float x = Input.GetAxis("Horizontal");
         if (comboCount > 0)
         {
-            x /=4;
+            x =0;
         }
             
         float targetSpeed = x * runMaxSpeed;
@@ -182,7 +199,10 @@ public class PJController : MonoBehaviour
     {
         if (Input.GetButtonDown("Attack1")&& IsGrounded)
         {
-
+            rb.linearVelocityX = 0;
+            canMove = false;
+            canAttack = false;
+            IsDoingSmt = true;
             TimerPas = 0;
             comboCount = Mathf.Clamp(comboCount + 1, 0, 2);
             
@@ -197,12 +217,14 @@ public class PJController : MonoBehaviour
         {
             comboCount = 0;
             animator.SetInteger("Combo", comboCount);
+            CanMove(true);
         }
     }    
     public void finishAttack2()
     {
         comboCount = 0;
         animator.SetInteger("Combo", comboCount);
+        CanMove(true);
     }
     
     
@@ -240,5 +262,6 @@ public class PJController : MonoBehaviour
     public void CanMove(bool _canMove = true)
     {
         canMove = _canMove;
+        IsDoingSmt = false;
     }
 }
