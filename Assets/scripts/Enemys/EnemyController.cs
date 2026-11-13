@@ -137,11 +137,14 @@ public class EnemyController : MonoBehaviour
         IsKnockback = true;
 
         rb.linearVelocity = Vector2.zero;
-        rb.AddForce(-dirHit.normalized * KnockbackForce, ForceMode2D.Impulse);
+        rb.AddForce(dirHit * KnockbackForce, ForceMode2D.Impulse);
         Invoke(nameof(EndKnockback), 0.25f);
         //rb.linearVelocity = Vector2.zero;
-        Vector2 pos = new Vector2(transform.position.x, transform.position.y + 0.5f);
-        GameObject blood = Instantiate(BloodParticule, pos, Quaternion.identity);
+        Vector2 pos = new Vector2(transform.position.x+(dirHit.x*0.5f), transform.position.y + 0.5f);
+        Quaternion rot;
+        if (dirHit.x < 0) rot = Quaternion.Euler(0, 270, 0);
+        else rot = Quaternion.Euler(0, 90, 0);
+        GameObject blood = Instantiate(BloodParticule, pos, rot);
         ParticleSystem ps = blood.GetComponent<ParticleSystem>();
 
         var main = ps.main;

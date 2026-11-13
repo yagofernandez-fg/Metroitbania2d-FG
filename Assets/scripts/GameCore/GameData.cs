@@ -15,6 +15,7 @@ public class GameData
     [SerializeField]private float maxMana;
     [Header("Movility")]
     [SerializeField]private float maxJump;
+    [SerializeField]private bool hasDash = false;
     [Header("Damage")]
     [SerializeField]private float dmg;
     [SerializeField]private float magicDmg;
@@ -111,7 +112,10 @@ public class GameData
         get { return magicDmg; }
         set { magicDmg = value; }
     }
-    
-    
 
+    public bool HasDash
+    {
+        get { return hasDash; }
+        set { hasDash = value; }
+    }
 }

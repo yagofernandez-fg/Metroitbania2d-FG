@@ -24,7 +24,7 @@ public class Magic : MonoBehaviour
             anim.SetTrigger("Explote");            
             Vector3 direccion = (transform.position - other.transform.position).normalized;
             other.gameObject.GetComponent<EnemyController>().GetDamage(GameManager.instance.gameData.Dmg);
-            other.gameObject.GetComponent<EnemyController>().GetHit(direccion);
+            other.gameObject.GetComponent<EnemyController>().GetHit(-direccion);
             Instantiate(ParticulasExplotion, other.transform.position, Quaternion.identity);
             Destroy(this.gameObject,0.2f);
         }

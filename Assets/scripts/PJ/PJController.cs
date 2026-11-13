@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 public class PJController : MonoBehaviour
@@ -10,9 +11,13 @@ public class PJController : MonoBehaviour
     private int jumpCount;
     private bool IsFalling;
     private bool IsGrounded;
+    private bool IsDashing;
+    private bool CanDash;
     [SerializeField]private float runMaxSpeed;
     [SerializeField]private float runAccelAmount;
     [SerializeField]private float runDeccelAmount;
+    [SerializeField]private float dashForce;
+    [SerializeField]private TrailRenderer TrailDash;
     private float accelRate;
     private int comboCount=0;
 
@@ -25,8 +30,6 @@ public class PJController : MonoBehaviour
     private float TimerPas = 10;
     bool canAttack = true;
     bool canMove = true;
-
-    bool IsDoingSmt = false;
 
 
 
@@ -46,26 +49,42 @@ public class PJController : MonoBehaviour
         if (GameManager.instance.gameData.IsDeath || GameManager.instance.Intransition) return;
 
         TimerPas += Time.deltaTime;
-        move();
-        jump();
+        if (!IsDashing)
+        {
+            move();
+            jump();
+        }
         
         if (TimerPas >= attackRate)
         {
             canAttack = true;
         }
-        if ((canAttack || comboCount==1 )&& !IsDoingSmt)
+        if ((canAttack || comboCount==1 ))
         {
             Attack();
         }
 
-        if (IsGrounded && !IsDoingSmt && canAttack)
+        if (IsGrounded && canAttack)
         {
             hardAttack();
         }
 
-        if (IsGrounded && canAttack && !IsDoingSmt)
+        if (IsGrounded && canAttack)
         {
             Magic();
+        }
+
+        if (GameManager.instance.gameData.HasDash)
+        {
+            
+            if (CanDash && canAttack)
+            {
+                dash();
+            }
+            if (IsGrounded)
+            {
+                CanDash = true;
+            }
         }
 
     }
@@ -75,10 +94,9 @@ public class PJController : MonoBehaviour
             if (Input.GetButtonDown("Magic"))
             {
                 if (GameManager.instance.gameData.Mana > 0)
-                {
-
+                { 
+                TimerPas = 0;
                 canAttack = false;
-                IsDoingSmt = true;
                 rb.linearVelocityX = 0;
                 animator.SetTrigger("Magic");
                     Vector2 dir = transform.position;
@@ -106,8 +124,8 @@ public class PJController : MonoBehaviour
     {
         if (Input.GetButtonDown("HardAttck"))
         {
+            TimerPas = 0;
             canAttack = false;
-            IsDoingSmt = true;
             rb.linearVelocityX =0;
             animator.SetTrigger("HardAttack");
             canMove =  false;
@@ -202,7 +220,6 @@ public class PJController : MonoBehaviour
             rb.linearVelocityX = 0;
             canMove = false;
             canAttack = false;
-            IsDoingSmt = true;
             TimerPas = 0;
             comboCount = Mathf.Clamp(comboCount + 1, 0, 2);
             
@@ -217,6 +234,7 @@ public class PJController : MonoBehaviour
         {
             comboCount = 0;
             animator.SetInteger("Combo", comboCount);
+            // canMove = true;
             CanMove(true);
         }
     }    
@@ -224,6 +242,7 @@ public class PJController : MonoBehaviour
     {
         comboCount = 0;
         animator.SetInteger("Combo", comboCount);
+        //canMove =  true;
         CanMove(true);
     }
     
@@ -234,7 +253,7 @@ public class PJController : MonoBehaviour
         {
             Vector3 direccion = (transform.position - other.transform.position).normalized;
             other.gameObject.GetComponent<EnemyController>().GetDamage(GameManager.instance.gameData.Dmg);
-            other.gameObject.GetComponent<EnemyController>().GetHit(direccion);
+            other.gameObject.GetComponent<EnemyController>().GetHit(-direccion);
         }
     }
 
@@ -259,9 +278,31 @@ public class PJController : MonoBehaviour
             }
     }
 
+
+
+    public void dash()
+    {
+        if (Input.GetButtonDown("Dash"))
+        {
+            CanDash = false;
+            StartCoroutine(Dash());
+            rb.AddForce(transform.right*dashForce,ForceMode2D.Impulse); 
+            print(TrailDash == null);
+            animator.SetTrigger("Dash");
+        }
+    }
+
+    IEnumerator Dash()
+    {
+        IsDashing = true;
+        TrailDash.emitting = true;
+        yield return new WaitForSeconds(0.5f);
+        TrailDash.emitting = false;
+        IsDashing = false;
+    }
+
     public void CanMove(bool _canMove = true)
     {
         canMove = _canMove;
-        IsDoingSmt = false;
     }
 }
