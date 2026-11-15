@@ -12,7 +12,7 @@ public class PJController : MonoBehaviour
     private bool IsFalling;
     private bool IsGrounded;
     private bool IsDashing;
-    private bool CanDash;
+    private bool CanDash= true;
     [SerializeField]private float runMaxSpeed;
     [SerializeField]private float runAccelAmount;
     [SerializeField]private float runDeccelAmount;
@@ -81,12 +81,15 @@ public class PJController : MonoBehaviour
             {
                 dash();
             }
-            if (IsGrounded)
-            {
-                CanDash = true;
-            }
+            
         }
 
+    }
+
+    IEnumerator dashColdTime()
+    {
+        yield return new WaitForSeconds(1f);
+        CanDash = true;
     }
 
     private void Magic()
@@ -289,6 +292,7 @@ public class PJController : MonoBehaviour
             rb.AddForce(transform.right*dashForce,ForceMode2D.Impulse); 
             print(TrailDash == null);
             animator.SetTrigger("Dash");
+            StartCoroutine(dashColdTime());
         }
     }
 
