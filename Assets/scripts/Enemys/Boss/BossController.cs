@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using static Unity.U2D.Physics.PhysicsShape;
 using Random = UnityEngine.Random;
 
 enum BossEstate
@@ -26,7 +27,7 @@ public class BossController : EnemyController
     void Start()
     {
         base.Start();
-        ChangeState(BossEstate.SPIKE_ATTACK);
+        ChangeState(BossEstate.ROLL_ATTACK);
         
         // player = GameObject.Find("PJ");
         
@@ -94,6 +95,9 @@ public class BossController : EnemyController
             GameObject Spike = Instantiate(ProjectilePrefab, spikesSpawnPoints[i].position, spikesSpawnPoints[i].rotation);
             Spike.GetComponent<EnemyProjectile>().ImpulseProjectile();
         }
+        yield return new WaitForSeconds(.5f);
+        anim.SetBool("Spike", false);
+        ChangeState(BossEstate.IDLE);
     }
 
     public void throwspikes()
@@ -124,15 +128,12 @@ public class BossController : EnemyController
         LoockTo(CenterP);
         anim.SetBool("Walk", true);
         yield return null;
-        print(this.transform.position.x < CenterP.position.x+distanceToAttack && this.transform.position.x > CenterP.position.x-distanceToAttack);
+        print(this.transform.position.x > CenterP.position.x + distanceToAttack && this.transform.position.x < CenterP.position.x - distanceToAttack);
         print("Point T "+CenterP.position);
         
         print("Boss T "+transform.position);
-        while (this.transform.position.x > CenterP.position.x+distanceToAttack && this.transform.position.x < CenterP.position.x-distanceToAttack)
+        while (transform.position.x > CenterP.position.x + distanceToAttack || transform.position.x < CenterP.position.x - distanceToAttack)
         {
-            
-            print("Boss T "+transform.position);
-            print(this.transform.position.x < CenterP.position.x+distanceToAttack && this.transform.position.x > CenterP.position.x-distanceToAttack);
             rb.linearVelocity = transform.right * MoveSpeed;
             yield return null;
         }
@@ -142,16 +143,25 @@ public class BossController : EnemyController
     }
 
 
-    private void OnCollisionEnter2D(Collision2D other)
+    private void OnCollisionStay2D(Collision2D other)
     {
-        if (other.gameObject.tag == "ground")
+        if (!IsRolling) return;
+        if (!other.gameObject.CompareTag("ground")) return;
+
+        foreach (ContactPoint2D contact in other.contacts)
         {
-            //print(Mathf.Abs(other.GetContact(0).normal.x));
-            if (Mathf.Abs(other.GetContact(0).normal.x) == 1)
+            
+            if (Mathf.Abs(contact.normal.x) > 0.9f)
             {
                 IsRolling = false;
+                break;
             }
         }
+        //if (Mathf.Abs(other.contacts[0].normal.x) > 0.9f) esto no va tengo que preguntalo
+        //{
+        //    IsRolling = false;
+        //}
+
     }
 
     private void LoockTo(Transform target)

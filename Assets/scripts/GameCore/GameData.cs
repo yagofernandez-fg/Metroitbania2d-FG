@@ -10,6 +10,7 @@ public class GameData
     [SerializeField]private float maxLife;
     private bool Isdeath = false;
     [SerializeField] private int potionCount;
+    [SerializeField] private int maxPotions;
     [Header("Mana")] 
     [SerializeField] private float mana;
     [SerializeField]private float maxMana;
@@ -42,6 +43,11 @@ public class GameData
         SpawnPoints = new Vector3(-7.7f,-6.9f,0f);
     }
 
+    public int MaxPotions
+    {
+        get { return maxPotions; }
+        set { maxPotions = value; }
+    }
 
     public float Life
     {

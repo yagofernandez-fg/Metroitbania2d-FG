@@ -24,6 +24,7 @@ public class PJController : MonoBehaviour
     [SerializeField] private float attackRate = 0.3f;
     [SerializeField] private GameObject MagicPrefab;
     [SerializeField] private float ManaMagicCost=1;
+    [SerializeField] private ParticleSystem healParticules;
     
     private LvlManager lvlManager;
 
@@ -83,6 +84,7 @@ public class PJController : MonoBehaviour
             }
             
         }
+            DrinckPoti();
 
     }
 
@@ -120,6 +122,25 @@ public class PJController : MonoBehaviour
             {
                 lvlManager.ShackManabar();
             }
+        }
+    }
+
+    private void DrinckPoti()
+    {
+               if (Input.GetButtonDown("Poti"))
+        {
+            if (GameManager.instance.gameData.PotionCount <= 0) return;
+            healParticules.Play();
+            if (GameManager.instance.gameData.Life+4 >=GameManager.instance.gameData.MaxLife)
+            {
+                GameManager.instance.gameData.Life = GameManager.instance.gameData.MaxLife;
+            }
+            else GameManager.instance.gameData.Life += 4;
+
+            GameManager.instance.gameData.PotionCount--;
+
+            lvlManager.UpdatePotionCount();
+            lvlManager.UpdateLifeBar();
         }
     }
 
