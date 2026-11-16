@@ -53,6 +53,12 @@ public class EnemyProjectile : MonoBehaviour
         transform.eulerAngles = new Vector3(0, 0, angle-180);
     }
 
+    public void ImpulseProjectile()
+    {
+        IsInAir = true;
+        rb.AddForce(transform.right * ImpulseForce);
+    }
+
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.gameObject.tag == "Player")
@@ -60,9 +66,14 @@ public class EnemyProjectile : MonoBehaviour
             other.gameObject.GetComponent<PJController>().GetDamage(dmg);
             Destroy(gameObject);
         }
-        IsInAir = false;
-        rb.linearVelocity = Vector2.zero;
-        collider.enabled = false;
-        rb.bodyType = RigidbodyType2D.Static;
+
+        if (other.gameObject.tag == "ground")
+        {
+            IsInAir = false;
+            rb.linearVelocity = Vector2.zero;
+            collider.enabled = false;
+            rb.bodyType = RigidbodyType2D.Static;
+        }
+        
     }
 }

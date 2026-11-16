@@ -9,5 +9,9 @@ public class ControlAnimatorEnemy : MonoBehaviour
     }
     
     // mas funciones para llamar a los ataques
-    
+
+    public void PosSpikesAttack()
+    {
+        transform.parent.GetComponent<BossController>().throwspikes();
+    }
 }
