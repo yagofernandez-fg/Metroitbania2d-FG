@@ -30,6 +30,9 @@ public class EnemyProjectile : MonoBehaviour
     private void FixedUpdate()
     {
         if (!IsInAir) return;
+        
+        // Quaternion rot = Quaternion.FromToRotation(-Vector3.right,rb.linearVelocity.normalized );
+        // transform.rotation = transform.rotation*rot;
 
         float angle = Mathf.Atan2(rb.linearVelocity.y, rb.linearVelocity.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.Euler(0, 0, angle + 180f);

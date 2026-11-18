@@ -21,13 +21,18 @@ public class BossController : EnemyController
     [SerializeField] Transform[] spikesSpawnPoints;
     [SerializeField] private GameObject ProjectilePrefab;
     
+    [SerializeField] private Transform MinRocas, MaxRocas;
+    [SerializeField] private GameObject[] RocaProjectils;
+    [SerializeField] private float timeRocasI;
+    [SerializeField] private float RocaSpawnRate;
+    
     private bool IsRolling = false;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         base.Start();
-        ChangeState(BossEstate.ROLL_ATTACK);
+        ChangeState(BossEstate.ROAR);
         
         // player = GameObject.Find("PJ");
         
@@ -56,6 +61,7 @@ public class BossController : EnemyController
             case BossEstate.JUMP:
                 break;
             case BossEstate.ROAR:
+                StartCoroutine(Roar());
                 break;
             case BossEstate.ROLL_ATTACK:
                 StartCoroutine(rollAttack());
@@ -83,6 +89,39 @@ public class BossController : EnemyController
         newAttack();
     }
 
+    IEnumerator Roar()
+    {
+        anim.SetBool("Roar", true);
+        yield return new WaitForSeconds(.5f);
+        // caigan cosas del techo
+        //tiemble la pantalla
+        yield return StartCoroutine(InstanciateRocas());
+        anim.SetBool("Roar", false);
+        yield return new WaitForSeconds(.6f);
+        ChangeState(BossEstate.IDLE);
+    }
+
+    IEnumerator InstanciateRocas()
+    {
+        float elapse = 0;
+        while (elapse < timeRocasI)
+        {
+            elapse += RocaSpawnRate;
+            yield return new WaitForSeconds(RocaSpawnRate);
+            int RocaR =  Random.Range(0, RocaProjectils.Length);
+            
+            Vector2 SpawnPoint = new Vector2(Random.Range(MinRocas.position.x,MaxRocas.position.x), MinRocas.position.y);
+            Quaternion RandomRotation = Quaternion.Euler(0, 0, Random.Range(0, 360));
+
+            GameObject Roca =Instantiate(RocaProjectils[RocaR], SpawnPoint, RandomRotation);
+            Roca.GetComponent<ConstantForce2D>().torque = Random.Range(90f, 160f);
+
+            Camera.main.GetComponent<CaneraController>().StartShacke(timeRocasI,20,.01f,1);
+
+
+        }
+    }
+    
     IEnumerator spikes()
     {
         thrownSpikes = false;
@@ -95,7 +134,7 @@ public class BossController : EnemyController
             GameObject Spike = Instantiate(ProjectilePrefab, spikesSpawnPoints[i].position, spikesSpawnPoints[i].rotation);
             Spike.GetComponent<EnemyProjectile>().ImpulseProjectile();
         }
-        yield return new WaitForSeconds(.5f);
+        yield return new WaitForSeconds(1.5f);
         anim.SetBool("Spike", false);
         ChangeState(BossEstate.IDLE);
     }
