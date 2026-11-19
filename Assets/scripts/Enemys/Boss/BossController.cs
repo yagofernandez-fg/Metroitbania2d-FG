@@ -25,6 +25,7 @@ public class BossController : EnemyController
     [SerializeField] private GameObject[] RocaProjectils;
     [SerializeField] private float timeRocasI;
     [SerializeField] private float RocaSpawnRate;
+    [SerializeField] private ParticleSystem RoarParticule;
     
     private bool IsRolling = false;
     
@@ -78,8 +79,7 @@ public class BossController : EnemyController
     {
         int newState = Random.Range(1, 6);
         
-        ChangeState((BossEstate)newState);
-        
+        ChangeState((BossEstate)newState);        
     }
     
 
@@ -93,9 +93,9 @@ public class BossController : EnemyController
     {
         anim.SetBool("Roar", true);
         yield return new WaitForSeconds(.5f);
-        // caigan cosas del techo
-        //tiemble la pantalla
+        RoarParticule.Play();
         yield return StartCoroutine(InstanciateRocas());
+        RoarParticule.Stop();
         anim.SetBool("Roar", false);
         yield return new WaitForSeconds(.6f);
         ChangeState(BossEstate.IDLE);

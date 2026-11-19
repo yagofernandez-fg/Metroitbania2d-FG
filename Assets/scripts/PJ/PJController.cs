@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PJController : MonoBehaviour
@@ -160,11 +161,8 @@ public class PJController : MonoBehaviour
     {
         if(!canMove) return;
         float x = Input.GetAxis("Horizontal");
-        if (comboCount > 0)
-        {
-            x =0;
-        }
-            
+        if (comboCount > 0) x = 0;
+
         float targetSpeed = x * runMaxSpeed;
         targetSpeed = Mathf.Lerp(rb.linearVelocityX, targetSpeed, 1);
         accelRate = (Mathf.Abs(targetSpeed) > 0.01f) ? runAccelAmount : runDeccelAmount;
@@ -177,14 +175,8 @@ public class PJController : MonoBehaviour
         if (x != 0)
         {
             animator.SetBool("run", true);
-            if (x > 0 && comboCount <= 0)
-            {
-                transform.eulerAngles = Vector3.zero;
-            }
-            else if (x < 0 && comboCount <= 0)
-            {
-                transform.eulerAngles = new Vector3(0, 180,0);
-            }
+            if (x > 0 && comboCount <= 0) transform.eulerAngles = Vector3.zero;
+            else if (x < 0 && comboCount <= 0) transform.eulerAngles = new Vector3(0, 180,0);
         }
         else
         {

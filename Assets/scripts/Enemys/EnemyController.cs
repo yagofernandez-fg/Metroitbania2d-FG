@@ -26,6 +26,8 @@ public class EnemyController : MonoBehaviour
     protected Collider2D collider;
     protected bool IsKnockback = false;
 
+    [SerializeField] protected GameObject CurrencyPrefab;
+    [SerializeField] protected int CurrencyAmount;
     protected void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -108,6 +110,7 @@ public class EnemyController : MonoBehaviour
             IsDead = true;
             rb.bodyType = RigidbodyType2D.Static;
             collider.enabled = false;
+            spawnCurrency();
         }
         else
         {
@@ -152,6 +155,18 @@ public class EnemyController : MonoBehaviour
 
         ps.Play();
     }
+
+    private void spawnCurrency()
+    {
+        for (int i = 0; i < CurrencyAmount; i++)
+        {
+            float x = transform.position.x + UnityEngine.Random.Range(-0.5f, 0.5f);
+            float y = 0.5f + transform.position.y + UnityEngine.Random.Range(0f, 0.5f);
+            Vector2 pos = new Vector2(x, y);
+            Instantiate(CurrencyPrefab, pos, Quaternion.identity);
+        }
+    }
+
 
     private void EndKnockback()
     {

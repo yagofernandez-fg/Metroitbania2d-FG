@@ -9,7 +9,7 @@ public class LvlManager : MonoBehaviour
     [SerializeField] private Image LifeBar;
     [SerializeField] private Image ManaBar;
 
-    [SerializeField] private TextMeshProUGUI PotionCount;
+    [SerializeField] private TextMeshProUGUI PotionCount,CurrencyText;
     
     [SerializeField] private Transform[] SpawnPoints;
     
@@ -47,6 +47,7 @@ public class LvlManager : MonoBehaviour
         UpdateLifeBar();
         UpdateManaBar();
         UpdatePotionCount();
+        UpdateCurrencyCount();
     }
 
     public void UpdateLifeBar()
@@ -74,6 +75,11 @@ public class LvlManager : MonoBehaviour
     public void UpdatePotionCount()
     {
         PotionCount.text = "X"+GameManager.instance.gameData.PotionCount.ToString();
+    }
+
+    public void UpdateCurrencyCount()
+    {
+        CurrencyText.text = GameManager.instance.gameData.Currency.ToString();
     }
 
 
