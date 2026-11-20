@@ -13,27 +13,36 @@ enum BossEstate
 public class BossController : EnemyController
 {
     [SerializeField]private BossEstate bossEstate;
+    [SerializeField]private Color hitColor;
     [SerializeField] private GameObject player;
+    [Header("SPIN")]
     [SerializeField] private float rollSpeed;
+    [Header("MOVE")]
     [SerializeField] Transform CenterP;
-    
+    [Header("SPIKES")]
     private bool thrownSpikes = false;
     [SerializeField] Transform[] spikesSpawnPoints;
     [SerializeField] private GameObject ProjectilePrefab;
-    
+    [Header("ROAR")]
     [SerializeField] private Transform MinRocas, MaxRocas;
     [SerializeField] private GameObject[] RocaProjectils;
     [SerializeField] private float timeRocasI;
     [SerializeField] private float RocaSpawnRate;
     [SerializeField] private ParticleSystem RoarParticule;
+    [Header("JUMP")]
+    [SerializeField] private float jumpHeight;
+    [SerializeField] private float JumpSpeed;
+    [SerializeField] private float MinXJump,MaxXJump;
     
+    private SpriteRenderer spriteRenderer;
     private bool IsRolling = false;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         base.Start();
-        ChangeState(BossEstate.ROAR);
+        ChangeState(BossEstate.IDLE);
+        spriteRenderer = transform.GetChild(0).GetComponent<SpriteRenderer>();
         
         // player = GameObject.Find("PJ");
         
@@ -60,6 +69,7 @@ public class BossController : EnemyController
                 StartCoroutine(walk());
                 break;
             case BossEstate.JUMP:
+                StartCoroutine(Jump());
                 break;
             case BossEstate.ROAR:
                 StartCoroutine(Roar());
@@ -71,6 +81,7 @@ public class BossController : EnemyController
                 StartCoroutine(spikes());
                 break;
             case BossEstate.DEATH:
+                Dead();
                 break;
         }
     }
@@ -79,7 +90,7 @@ public class BossController : EnemyController
     {
         int newState = Random.Range(1, 6);
         
-        ChangeState((BossEstate)newState);        
+        ChangeState((BossEstate)newState);           
     }
     
 
@@ -121,7 +132,37 @@ public class BossController : EnemyController
 
         }
     }
-    
+
+    IEnumerator Jump()
+    {
+        Vector3 initialPosition = transform.position;
+        
+        float targetPosX =Mathf.Clamp(player.transform.position.x,MinXJump,MaxXJump) ;
+        anim.SetBool("Jump", true);
+        yield return new WaitForSeconds(0.7f);
+        float elapse = 0;
+        
+        while (elapse<1)
+        {
+            elapse += Time.deltaTime*JumpSpeed;
+            
+            float X = Mathf.Lerp(initialPosition.x, targetPosX, elapse);
+            float tY = 4*elapse*(1f-elapse);
+            
+            float Y = Mathf.Lerp(initialPosition.y,jumpHeight,tY );
+            transform.position = new Vector3(X, Y, initialPosition.z);
+            yield return null;
+        }
+        anim.SetBool("Jump", false);
+        yield return new WaitForSeconds(.6f);
+        ChangeState(BossEstate.IDLE);
+
+    }
+
+    private void Dead()
+    {
+        StopAllCoroutines();
+    }
     IEnumerator spikes()
     {
         thrownSpikes = false;
@@ -149,12 +190,6 @@ public class BossController : EnemyController
         anim.SetBool("Roll", true);
         yield return new WaitForSeconds(1.29f);
         IsRolling = true;
-        // while (IsRolling)
-        // {
-        //     rb.linearVelocity = transform.right * rollSpeed;
-        //     yield return null;
-        // }
-        //rodando
         rb.linearVelocity = transform.right * rollSpeed;
         yield return new WaitUntil(() => IsRolling == false);
         anim.SetBool("Roll", false);
@@ -200,8 +235,26 @@ public class BossController : EnemyController
         //{
         //    IsRolling = false;
         //}
-
     }
+
+    public override void GetDamage(float damage)
+    {
+        base.GetDamage(damage);
+        if (IsDead) ChangeState(BossEstate.DEATH);
+        else StartCoroutine(Hit());
+    }
+
+    IEnumerator Hit()
+    {
+        for (int i = 0; i < 3; i++)
+        {
+            spriteRenderer.color = hitColor;
+            yield return new WaitForSeconds(0.1f);
+            spriteRenderer.color = Color.white;
+            yield return new WaitForSeconds(0.1f);
+        }
+    }
+
 
     private void LoockTo(Transform target)
     {
