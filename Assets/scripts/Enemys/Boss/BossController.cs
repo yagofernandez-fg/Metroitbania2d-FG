@@ -13,8 +13,8 @@ enum BossEstate
 public class BossController : EnemyController
 {
     [SerializeField]private BossEstate bossEstate;
-    [SerializeField]private Color hitColor;
     [SerializeField] private GameObject player;
+    [SerializeField] private GameObject hitSprite;
     [Header("SPIN")]
     [SerializeField] private float rollSpeed;
     [Header("MOVE")]
@@ -33,7 +33,9 @@ public class BossController : EnemyController
     [SerializeField] private float jumpHeight;
     [SerializeField] private float JumpSpeed;
     [SerializeField] private float MinXJump,MaxXJump;
-    
+    [SerializeField] private float knockBackForce;
+
+    private CapsuleCollider2D col;
     private SpriteRenderer spriteRenderer;
     private bool IsRolling = false;
     
@@ -41,16 +43,11 @@ public class BossController : EnemyController
     void Start()
     {
         base.Start();
-        ChangeState(BossEstate.IDLE);
+        ChangeState(BossEstate.ROLL_ATTACK);
         spriteRenderer = transform.GetChild(0).GetComponent<SpriteRenderer>();
+        col = GetComponent<CapsuleCollider2D>();
         
         // player = GameObject.Find("PJ");
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
         
     }
 
@@ -162,6 +159,7 @@ public class BossController : EnemyController
     private void Dead()
     {
         StopAllCoroutines();
+        hitSprite.SetActive(false);
     }
     IEnumerator spikes()
     {
@@ -188,13 +186,16 @@ public class BossController : EnemyController
     IEnumerator rollAttack()
     {
         anim.SetBool("Roll", true);
+        // col.size = new Vector2(2.5f, 2.5f);
         yield return new WaitForSeconds(1.29f);
+        
         IsRolling = true;
         rb.linearVelocity = transform.right * rollSpeed;
         yield return new WaitUntil(() => IsRolling == false);
         anim.SetBool("Roll", false);
         yield return new WaitForSeconds(2f);
         ChangeState(BossEstate.IDLE);
+        // col.size = new Vector2(3.7f, 2.5f);
     }
 
     IEnumerator walk()
@@ -216,6 +217,23 @@ public class BossController : EnemyController
         ChangeState(BossEstate.IDLE);
     }
 
+    private void OnCollisionEnter2D(Collision2D other)
+    {
+        if (other.gameObject.tag == "Player")
+        {
+            IsRolling = false;
+            other.gameObject.GetComponent<PJController>().GetDamage(Damage);
+            if (bossEstate == BossEstate.JUMP)
+            {
+                Vector3 direction = other.transform.position - transform.position;
+                Vector2 dirKnockBack = Vector2.zero;
+                if (direction.x > 0) dirKnockBack = Vector2.left;
+                else dirKnockBack = Vector2.right;
+                
+                other.gameObject.GetComponent<PJController>().invokeKnockBack(dirKnockBack,knockBackForce);
+            }
+        }
+    }
 
     private void OnCollisionStay2D(Collision2D other)
     {
@@ -248,9 +266,9 @@ public class BossController : EnemyController
     {
         for (int i = 0; i < 3; i++)
         {
-            spriteRenderer.color = hitColor;
+            hitSprite.SetActive(true);
             yield return new WaitForSeconds(0.1f);
-            spriteRenderer.color = Color.white;
+            hitSprite.SetActive(false);
             yield return new WaitForSeconds(0.1f);
         }
     }

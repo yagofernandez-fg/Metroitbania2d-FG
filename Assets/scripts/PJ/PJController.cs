@@ -6,6 +6,8 @@ using UnityEngine;
 public class PJController : MonoBehaviour
 {
     [SerializeField] private float jumpForce;
+    [SerializeField] private float inmunityTime;
+    [SerializeField] private AnimationCurve inmunityCurve;
     private Rigidbody2D rb;
     private float NormalGravity;
     private Animator animator;
@@ -124,6 +126,40 @@ public class PJController : MonoBehaviour
                 lvlManager.ShackManabar();
             }
         }
+    }
+
+    public void invokeKnockBack(Vector2 dir, float force)
+    {
+        StartCoroutine(knockBack(dir, force));
+    }
+
+    public void incokeInmunity()
+    {
+        StartCoroutine(Inmunity());
+    }
+    
+    IEnumerator Inmunity(){
+        this.gameObject.layer = 3;
+        SpriteRenderer sr = transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>();
+        float t = 0;
+        while (t<inmunityTime)
+        {
+            t += Time.deltaTime;
+            float value = inmunityCurve.Evaluate(t);
+            Color color = new Color(sr.color.r, sr.color.g, sr.color.b, value);
+            sr.color = color;
+            yield return null;
+        }
+        this.gameObject.layer = 0;
+        sr.color = Color.white;
+    }
+
+    IEnumerator knockBack(Vector2 dir, float force)
+    {
+        CanMove(false);
+        rb.AddForce(dir * force, ForceMode2D.Impulse);
+        yield return new WaitForSeconds(0.4f);
+        CanMove(true);
     }
 
     private void DrinckPoti()
@@ -290,6 +326,7 @@ public class PJController : MonoBehaviour
             {
                 animator.SetTrigger("Hit");
                 comboCount = 0;
+                incokeInmunity();
                 animator.SetInteger("Combo", comboCount);
             }
     }
