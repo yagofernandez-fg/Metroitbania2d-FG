@@ -6,7 +6,7 @@ public class Door : MonoBehaviour
     private Animator DoorAnimator;
     private bool IsClosed;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    protected void Start()
     {
         DoorAnimator = GetComponent<Animator>();
         if (GameManager.instance.scenarioData.DoorOpen)

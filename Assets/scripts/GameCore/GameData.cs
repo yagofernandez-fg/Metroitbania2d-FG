@@ -26,6 +26,7 @@ public class GameData
     [Header("SaveData")]
     [SerializeField] private string Sceneloc; 
     [SerializeField] private Vector3 SpawnPoints;
+    [SerializeField] private bool boss1Defeted;
 
 
     public GameData()
@@ -41,6 +42,12 @@ public class GameData
         this.currency = 0;
         Sceneloc = "Zona1";
         SpawnPoints = new Vector3(-7.7f,-6.9f,0f);
+    }
+
+    public bool IsBoss1Defeted
+    {
+        get { return boss1Defeted; }
+        set { boss1Defeted = value; }
     }
 
     public int MaxPotions

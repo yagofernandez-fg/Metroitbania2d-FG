@@ -38,17 +38,20 @@ public class BossController : EnemyController
     private CapsuleCollider2D col;
     private SpriteRenderer spriteRenderer;
     private bool IsRolling = false;
+    public static Action<bool> OnBossDefeated;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         base.Start();
-        ChangeState(BossEstate.ROLL_ATTACK);
         spriteRenderer = transform.GetChild(0).GetComponent<SpriteRenderer>();
         col = GetComponent<CapsuleCollider2D>();
-        
-        // player = GameObject.Find("PJ");
-        
+        StartBoss.OnCombatStart += OnCombatStart;
+    }
+
+    private void OnCombatStart()
+    {
+        ChangeState(BossEstate.IDLE);
     }
 
     private void ChangeState(BossEstate newBossEstate)
@@ -159,6 +162,7 @@ public class BossController : EnemyController
     private void Dead()
     {
         StopAllCoroutines();
+        OnBossDefeated?.Invoke(true);
         hitSprite.SetActive(false);
     }
     IEnumerator spikes()
@@ -278,5 +282,10 @@ public class BossController : EnemyController
     {
         if (target.position.x > transform.position.x) this.transform.eulerAngles = Vector3.zero;// derecha
         else this.transform.eulerAngles = new Vector3(0, 180, 0);
+    }
+
+    private void OnDisable()
+    {
+        StartBoss.OnCombatStart-= OnCombatStart;
     }
 }
