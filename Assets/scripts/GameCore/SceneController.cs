@@ -25,6 +25,19 @@ public class SceneController : MonoBehaviour
         StartCoroutine(loadLvl(sceneName));
     }
 
+    public void MakeTransition(float time)
+    {
+        StartCoroutine(makeTransition(time));
+    }
+
+    IEnumerator makeTransition(float time=1)
+    {
+        GameManager.instance.Intransition = true;
+        animator.SetTrigger("EndLvl");
+        yield return new WaitForSeconds(time);
+        animator.SetTrigger("StartLvl");
+        GameManager.instance.Intransition = false;
+    }
 
     IEnumerator loadLvl(string sceneName)
     {
