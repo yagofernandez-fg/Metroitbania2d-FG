@@ -58,11 +58,11 @@ public class DestructibleWalls : MonoBehaviour
         {
             Rigidbody2D rb = roc.GetComponent<Rigidbody2D>();
 
-            Vector2 Dir = new Vector2(1, Random.Range(-1f, 1f));
+            Vector2 Dir = -transform.right;
             float force = Random.Range(2f, 3f);
             float torque = Random.Range(-1.5f, 1.5f);
 
-            rb.AddForce(Dir * force, ForceMode2D.Impulse);
+            rb.AddForce(Dir.normalized * force, ForceMode2D.Impulse);
 
             rb.AddTorque(torque, ForceMode2D.Impulse);
         }

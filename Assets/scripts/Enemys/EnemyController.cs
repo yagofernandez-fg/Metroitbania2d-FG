@@ -28,6 +28,14 @@ public class EnemyController : MonoBehaviour
 
     [SerializeField] protected GameObject CurrencyPrefab;
     [SerializeField] protected int CurrencyAmount;
+    [SerializeField] protected bool canPatrol;
+    [SerializeField] protected Transform[] patrolPoints;
+    protected int currentPatrolIndex = 0;
+    protected float patrolWaitTimer = 0f;
+    //[Header("Platform limits")]
+    //[SerializeField] protected bool useLimits;
+    //[SerializeField] protected Transform limitLeft;
+    //[SerializeField] protected Transform limitRight;
     protected void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -39,20 +47,30 @@ public class EnemyController : MonoBehaviour
     protected void Update()
     {
         TimerPas += Time.deltaTime;
-        if (CanChase == true &&  IsDead == false)
+
+        if (IsDead)
+        {
+            return;
+        }
+
+        if (CanChase)
         {
             ChasePlayer();
+        }
+        else if (canPatrol && patrolPoints != null && patrolPoints.Length > 0)
+        {
+            attacking = false;
+            Patrol();
         }
         else
         {
             anim.SetBool("run", false);
             attacking = false;
-
         }
 
         if (attacking)
         {
-            if (TimerPas>= attackRate)
+            if (TimerPas >= attackRate)
             {
                 Attack();
                 TimerPas = 0;
@@ -71,34 +89,34 @@ public class EnemyController : MonoBehaviour
 
     private void ChasePlayer()
     {
-        if(IsDead||IsKnockback) return;
+        if (IsDead || IsKnockback) return;
         anim.SetBool("run", true);
-        Vector3 moveDir = PlayerTransform.position - transform.position;// Posicion final - Posicion Inicial
-        if (moveDir.x < 0)// izquierda negativo
-        {
-            transform.eulerAngles = Vector3.zero;
-            rb.linearVelocityX = -MoveSpeed;
-        }
-        else// derecha positivo
-        {
-            transform.eulerAngles = new Vector3(0, 180, 0);
-            rb.linearVelocityX = MoveSpeed;
-        }
+
+        Vector3 moveDir = PlayerTransform.position - transform.position;
+        float dir = moveDir.x < 0 ? -1f : 1f;
+
+        transform.eulerAngles = dir < 0 ? Vector3.zero : new Vector3(0, 180, 0);
+        rb.linearVelocityX = dir * MoveSpeed;
 
         if (Mathf.Abs(moveDir.x) <= distanceToAttack)
         {
             rb.linearVelocityX = 0;
             anim.SetBool("run", false);
             attacking = true;
-                
         }
-        else
-        {
-            attacking = false;
-        }
+        //else
+        //{
+        //    attacking = false;
+
+        //    if (IsAtLimit(dir))
+        //    {
+        //        rb.linearVelocityX = 0;
+        //        anim.SetBool("run", false);
+        //    }
+        //}
     }
 
-    
+
 
     public virtual void GetDamage(float damage)
     {
@@ -175,9 +193,70 @@ public class EnemyController : MonoBehaviour
 
 
 
-    public void ChasePlayer(Transform PJTransform,bool Chase)
+    public void ChasePlayer(Transform PJTransform, bool Chase)
     {
         PlayerTransform = PJTransform;
         CanChase = Chase;
+
+        if (!Chase) currentPatrolIndex = GetClosestPatrolIndex();
     }
+
+    protected int GetClosestPatrolIndex()
+    {
+        int best = 0;
+        float bestDist = 1000;
+        for (int i = 0; i < patrolPoints.Length; i++)
+        {
+            float d = Mathf.Abs(patrolPoints[i].position.x - transform.position.x);
+            if (d < bestDist) { bestDist = d; best = i; }
+        }
+        return best;
+    }
+    protected void Patrol()
+    {
+        if (IsKnockback) return;
+
+        Transform target = patrolPoints[currentPatrolIndex];
+        float distX = target.position.x - transform.position.x;
+
+        // Ha llegado al punto: esperar y pasar al siguiente
+        if (Mathf.Abs(distX) <= 0.2f)
+        {
+            rb.linearVelocityX = 0;
+            anim.SetBool("run", false);
+
+            patrolWaitTimer += Time.deltaTime;
+            if (patrolWaitTimer >= 0.75f)// esperamos 0.75 s
+            {
+                patrolWaitTimer = 0f;
+                currentPatrolIndex = (currentPatrolIndex + 1) % patrolPoints.Length;
+            }
+            return;
+        }
+
+        // Caminar hacia el punto
+        anim.SetBool("run", true);
+        if (distX < 0)
+        {
+            transform.eulerAngles = Vector3.zero;
+            rb.linearVelocityX = -MoveSpeed;
+        }
+        else
+        {
+            transform.eulerAngles = new Vector3(0, 180, 0);
+            rb.linearVelocityX = MoveSpeed;
+        }
+    }
+
+    //protected bool IsAtLimit(float dir)
+    //{
+    //    if (!useLimits || limitLeft == null || limitRight == null) return false;
+
+    //    if (dir < 0 && transform.position.x <= limitLeft.position.x) return true;
+    //    if (dir > 0 && transform.position.x >= limitRight.position.x) return true;
+
+    //    return false;
+    //}
+
+
 }
